@@ -9,13 +9,17 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { UIContext } from "../../context/ui";
 
 const menuItems: string[] = ["Inbox", "Starred", "Send email", "Drafts"];
 
 export const Sidebar = () => {
+
+  const { sidemenuOpen, closeSideMenu } = useContext(UIContext)
+
   return (
-    <Drawer anchor="left" open={true} onClose={() => console.log("cerrando")}>
+    <Drawer anchor="left" open={sidemenuOpen} onClose={closeSideMenu}>
       <Box sx={{ width: 250 }}>
         <Typography variant="h4">Menú</Typography>
         <List>
