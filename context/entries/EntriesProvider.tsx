@@ -1,10 +1,11 @@
 import { FC, PropsWithChildren, useReducer } from 'react';
+import { Entry } from '../../interfaces';
 import { EntriesContext, entriesReducer } from './';
 
 type Props = {};
 
 export interface EntriesState {
-  entries: [];
+  entries: Entry[];
 }
 
 const Entries_INITIAL_STATE: EntriesState = {
