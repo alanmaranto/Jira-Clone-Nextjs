@@ -19,13 +19,13 @@ const Entries_INITIAL_STATE: EntriesState = {
     },
     {
       _id: uuidv4(),
-      description: "Sint labore laboris sit veniam consequat labore in.",
+      description: "In-Progress Sint labore laboris sit veniam consequat labore in.",
       status: "in-progress",
       createdAt: Date.now() - 1000000,
     },
     {
       _id: uuidv4(),
-      description: "Est aliquip deserunt ea sunt Lorem amet ad labore.",
+      description: "Finished - Est aliquip deserunt ea sunt Lorem amet ad labore.",
       status: "finished",
       createdAt: Date.now() - 1000000,
     },
