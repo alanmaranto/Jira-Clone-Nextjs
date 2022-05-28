@@ -10,3 +10,9 @@ mongodb://localhost:27017/entriesdb
 
 ## Configurate envs
 Rename .env.template to .env
+
+## Seed Db with data
+
+```
+/api/seed
+```
