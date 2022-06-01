@@ -16,6 +16,8 @@ export default function handler(
   }
 
   switch (req.method) {
+    case "GET":
+      return getEntry(req, res);
     case "PUT":
       return updateEntry(req, res);
     default:
@@ -56,4 +58,16 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       error: error.errors.status.message,
     });
   }
+};
+
+const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query;
+  await db.connect();
+  const foundEntry = await Entry.findById(id);
+  await db.disconnect();
+
+  if (!foundEntry) {
+    return res.status(404).json({ message: "Entry does not exist" });
+  }
+  res.status(200).json(foundEntry!);
 };
