@@ -4,11 +4,21 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  FormControl,
+  FormLabel,
   Grid,
   TextField,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  capitalize,
+  IconButton,
 } from "@mui/material";
-import { SaveOutlined } from "@mui/icons-material";
+import { SaveOutlined, DeleteOutline } from "@mui/icons-material";
 import { Layout } from "../../../components/layouts";
+import { EntryStatus } from "../../../interfaces";
+
+const validStatus: EntryStatus[] = ["pending", "in-progress", "finished"];
 
 export const EntryPage = () => {
   return (
@@ -27,7 +37,19 @@ export const EntryPage = () => {
                 autoFocus
               />
 
-              {/* RADIO */}
+              <FormControl>
+                <FormLabel>status:</FormLabel>
+                <RadioGroup row>
+                  {validStatus.map((option) => (
+                    <FormControlLabel
+                      key={option}
+                      value={option}
+                      control={<Radio />}
+                      label={capitalize(option)}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </CardContent>
             <CardActions>
               <Button
@@ -41,6 +63,16 @@ export const EntryPage = () => {
           </Card>
         </Grid>
       </Grid>
+      <IconButton
+        sx={{
+          position: "fixed",
+          bottom: 30,
+          right: 30,
+          backgroundColor: "error.dark",
+        }}
+      >
+        <DeleteOutline />
+      </IconButton>
     </Layout>
   );
 };
