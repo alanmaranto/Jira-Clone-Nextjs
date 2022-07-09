@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import {
   Button,
   Card,
@@ -26,6 +26,10 @@ export const EntryPage = () => {
   const [status, setStatus] = useState<EntryStatus>("pending");
   const [touched, setTouched] = useState(false);
 
+  const isNotValid = useMemo(() => {
+    return inputValue.length <= 0 && touched;
+  }, [inputValue, touched]);
+
   const onInputValueChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
@@ -34,7 +38,10 @@ export const EntryPage = () => {
     setStatus(event.target.value as EntryStatus);
   };
 
-  const onSave = () => {};
+  const onSave = () => {
+    // if (inputValue.length === 0) return;
+    // setTouched(true);
+  };
 
   return (
     <Layout title="... ... ...">
@@ -55,6 +62,9 @@ export const EntryPage = () => {
                 autoFocus
                 value={inputValue}
                 onChange={onInputValueChanged}
+                onBlur={() => setTouched(true)}
+                helperText={isNotValid && "Add a value"}
+                error={isNotValid}
               />
 
               <FormControl>
@@ -77,6 +87,7 @@ export const EntryPage = () => {
                 variant="contained"
                 fullWidth
                 onClick={onSave}
+                disabled={inputValue.length === 0}
               >
                 Save
               </Button>
