@@ -21,6 +21,8 @@ export default function handler(
       return getEntry(req, res);
     case "PUT":
       return updateEntry(req, res);
+    case "DELETE":
+      return deleteEntry(req, res);
     default:
       res.status(400).json({ message: "Method does not exist" });
       break;
@@ -71,4 +73,27 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(404).json({ message: "Entry does not exist" });
   }
   res.status(200).json(foundEntry!);
+};
+
+const deleteEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query;
+  await db.connect();
+  const entryToDelete = await Entry.findById(id);
+
+  if (!entryToDelete) {
+    await db.disconnect();
+    return res.status(404).json({ message: "Entry does not exist" });
+  }
+
+  try {
+    await Entry.findByIdAndDelete(id);
+    await db.disconnect();
+    res.status(200).json({ message: "Entry deleted" });
+  } catch (error: any) {
+    await db.disconnect();
+    res.status(400).json({
+      message: "Something went wrong deleting the Entry",
+      error: error.errors.status.message,
+    });
+  }
 };

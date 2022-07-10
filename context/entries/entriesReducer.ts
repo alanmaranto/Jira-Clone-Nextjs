@@ -4,7 +4,8 @@ import { Entry } from "../../interfaces";
 type EntriesActionType =
   | { type: "Entry - Add-Entry"; payload: Entry }
   | { type: "Entry - Entry-Updated"; payload: Entry }
-  | { type: "Entry - Fetch-Entries"; payload: Entry[] };
+  | { type: "Entry - Fetch-Entries"; payload: Entry[] }
+  | { type: "Entry - Entry-Deleted"; payload: Entry };
 
 export const entriesReducer = (
   state: EntriesState,
@@ -32,6 +33,13 @@ export const entriesReducer = (
       return {
         ...state,
         entries: [...action.payload],
+      };
+    case "Entry - Entry-Deleted":
+      return {
+        ...state,
+        entries: state.entries.filter(
+          (entry) => entry._id !== action.payload._id
+        ),
       };
     default:
       return state;

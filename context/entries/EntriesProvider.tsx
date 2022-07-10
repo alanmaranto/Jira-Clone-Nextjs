@@ -3,21 +3,21 @@ import { Entry } from "../../interfaces";
 import { EntriesContext, entriesReducer } from "./";
 import { entriesApi } from "../../apis";
 import { useSnackbar } from "notistack";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 export interface EntriesState {
   entries: Entry[];
-  showSnackbar: boolean;
 }
 
 const Entries_INITIAL_STATE: EntriesState = {
   entries: [],
-  showSnackbar: false,
 };
 
 export const EntriesProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
@@ -41,12 +41,12 @@ export const EntriesProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
     showSnackbar = false
   ) => {
     try {
-      const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, {
+      const res = await entriesApi.put<Entry>(`/entries/${_id}`, {
         description,
         status,
       });
-
-      dispatch({ type: "Entry - Entry-Updated", payload: data });
+      dispatch({ type: "Entry - Entry-Updated", payload: res.data });
+      refreshEntries();
       if (showSnackbar) {
         enqueueSnackbar("Entry updated successfully", {
           variant: "success",
@@ -56,6 +56,31 @@ export const EntriesProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
             horizontal: "right",
           },
         });
+      }
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteEntry = async (entry: Entry, showSnackbar = false) => {
+    try {
+      const res = await entriesApi.delete<Entry>(`/entries/${entry._id}`);
+      if (res.status === 200) {
+        dispatch({ type: "Entry - Entry-Deleted", payload: res.data });
+        refreshEntries();
+
+        if (showSnackbar) {
+          enqueueSnackbar("Entry deleted successfully", {
+            variant: "success",
+            autoHideDuration: 1500,
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "right",
+            },
+          });
+        }
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -68,6 +93,7 @@ export const EntriesProvider: FC<PropsWithChildren<Props>> = ({ children }) => {
         ...state,
         addNewEntry,
         updateEntry,
+        deleteEntry,
       }}
     >
       {children}
