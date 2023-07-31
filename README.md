@@ -16,3 +16,8 @@ Rename .env.template to .env
 ```
 /api/seed
 ```
+
+Nextjs v 12.1.6
+
+Updated
+Nextjs v 12.2.2
